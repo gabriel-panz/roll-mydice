@@ -1,5 +1,5 @@
 import { useState, ChangeEvent, useEffect } from "react"
-import { redirect, useParams } from "react-router-dom"
+import { useParams } from "react-router-dom"
 import DiceButton from "../../components/DiceButton"
 
 export type DiceType = "bonus" | "d4" | "d6" | "d8" | "d10" | "d12" | "d20"
@@ -11,6 +11,8 @@ export interface DiceItem {
 }
 
 function stringifyFormula(f: DiceItem[]): string {
+    if (f.length < 1) return ""
+    console.log("string")
     return f.reduce((prev, current, idx, _) => {
         if (idx !== 0 && current.count > -1)
             prev += "+"
@@ -135,7 +137,11 @@ export default function Home() {
     const [formula, setFormula] = useState<DiceItem[]>(decoded)
 
     useEffect(() => {
-        window.history.replaceState(window.history.state, "", stringifyFormula(formula));
+        let nf = stringifyFormula(formula)
+        if (nf)
+            window.history.replaceState(window.history.state, "", nf);
+        else
+            window.history.replaceState(window.history.state, "", "/");
     }, [formula])
 
     function addToFormula(d: DiceItem) {
