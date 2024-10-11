@@ -1,6 +1,8 @@
+import './index.css';
 import { useState, ChangeEvent, useEffect } from "react"
 import { useParams } from "react-router-dom"
 import DiceButton from "../../components/DiceButton"
+import { CgAdd } from 'react-icons/cg';
 
 export type DiceType = "bonus" | "d4" | "d6" | "d8" | "d10" | "d12" | "d20"
 
@@ -201,6 +203,15 @@ export default function Home() {
         setFormula(updated)
     }
 
+    function setDieCount(id: string, val: number) {
+        let updated = formula.map(d => {
+            if (d.id === id) d.count = val
+            return d
+        })
+
+        setFormula(updated)
+    }
+
     function addDie(dice: DiceItem) {
         let updated = formula.map(d => {
             if (d.id === dice.id) d.count += 1
@@ -242,14 +253,19 @@ export default function Home() {
     }
 
     return (
-        <div className="App">
-            <header className="App-header">
+        <div className="Home">
+            <header className="Header">
                 <h1>Roll your dice:</h1>
+            </header>
+            <section className='display'>
                 {rollResult != null
                     ? <p>{rollResult}</p>
                     : ""}
+            </section>
+            <section className='controls'>
                 <ul className='diceControls'>
                     {formula.map((d) => <DiceButton
+                        setDieCount={setDieCount}
                         removeSelf={removeDiceButton}
                         onSelectedDieChange={onSelectedDieChange}
                         key={d.id}
@@ -257,11 +273,31 @@ export default function Home() {
                         addDie={addDie}
                         removeDie={removeDie}
                     ></DiceButton>)}
-                    <button onClick={addDiceButton}>Add Die</button>
+                    <CgAdd
+                        id='add-die-button'
+                        className="action"
+                        onClick={addDiceButton}>
+                        Add Die
+                    </CgAdd>
                 </ul>
-                <button onClick={rollDice}>Roll</button>
-                <button onClick={share}>Share</button>
-            </header>
+            </section>
+            <section className='main-actions'>
+                <button
+                    id="roll-button"
+                    className='action'
+                    onClick={rollDice}
+                >
+                    Roll
+                </button>
+                <button
+                    id='share-button'
+                    className='action'
+                    onClick={share}
+                >
+                    Share
+                </button>
+            </section>
+
         </div >
     );
 }

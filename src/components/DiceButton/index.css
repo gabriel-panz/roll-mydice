@@ -1,0 +1,88 @@
+.diceControlCard {
+    display: flex;
+    flex-direction: column;
+    border: solid 2px var(--medium-color);
+    border-radius: 20px;
+    height: 150px;
+    width: 150px;
+    margin: 4px 8px;
+    align-self: center;
+}
+
+.diceControlCard .action {
+    width: 100%;
+    height: 25%;
+    padding: 0;
+    margin: 0;
+}
+
+.diceControlCard .add {
+    border-radius: 16px 16px 0 0;
+    border-bottom: solid var(--dark-color) 4px;
+
+}
+
+.diceControlCard .subtract {
+    border-radius: 0 0 16px 16px;
+    border-top: solid var(--dark-color) 4px;
+}
+
+.diceControlCard .diceCount {
+    height: 25%;
+    margin: 0;
+    font-size: large;
+    background-color: var(--light-color);
+    color: var(--main-bg-color);
+    /* background-color: var(--main-bg-color);
+    color: var(--light-color); */
+    filter: opacity(95%);
+    border: none;
+    padding: 4px 0;
+    text-align: center;
+    overflow: hidden;
+    -moz-appearance: textfield;
+    width: 100%;
+}
+
+.diceCount::-webkit-outer-spin-button,
+.diceCount::-webkit-inner-spin-button {
+    -webkit-appearance: none;
+    margin: 0;
+}
+
+.dieTypeSelect {
+    display: flex;
+    height: 25%;
+}
+
+.dieTypeSelect select {
+    font-size: large;
+    background-color: var(--light-color);
+    border: none;
+    color: var(--dark-color);
+    height: 100%;
+    min-width: 50%;
+    width: fit-content;
+    padding: 0 0 0 4px;
+    overflow: hidden;
+}
+
+.dieTypeSelect select:hover {
+    filter: brightness(110%);
+}
+
+.dieTypeSelect select:active {
+    filter: opacity(50%);
+}
+
+.dieTypeSelect .remove {
+    border-radius: 0 0 0 0;
+    height: 100%;
+    width: 50%;
+    background-color: var(--danger);
+    color: var(--light-color);
+}
+
+.remove:hover {
+    filter: brightness(180%);
+}
