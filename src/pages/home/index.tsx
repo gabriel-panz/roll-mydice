@@ -14,7 +14,7 @@ export interface DiceItem {
 
 function stringifyFormula(f: DiceItem[]): string {
     if (f.length < 1) return ""
-    console.log("string")
+
     return f.reduce((prev, current, idx, _) => {
         if (idx !== 0 && current.count > -1)
             prev += "+"
