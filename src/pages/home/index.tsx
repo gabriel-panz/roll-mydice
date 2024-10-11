@@ -3,115 +3,10 @@ import { useState, ChangeEvent, useEffect } from "react"
 import { useParams } from "react-router-dom"
 import DiceButton from "../../components/DiceButton"
 import { CgAdd } from 'react-icons/cg';
+import { DiceItem, DiceType } from '../../interfaces/diceItem';
+import { decodeFormula, stringifyFormula } from '../../services/formula';
+import Die from '../../components/Die';
 
-export type DiceType = "bonus" | "d4" | "d6" | "d8" | "d10" | "d12" | "d20"
-
-export interface DiceItem {
-    id: string
-    diceType: DiceType
-    count: number
-}
-
-function stringifyFormula(f: DiceItem[]): string {
-    if (f.length < 1) return ""
-
-    return f.reduce((prev, current, idx, _) => {
-        if (idx !== 0 && current.count > -1)
-            prev += "+"
-        prev += current.count
-        if (current.diceType !== "bonus")
-            prev += current.diceType
-        return prev
-    }, "")
-}
-
-function decodeFormula(f: string): DiceItem[] {
-    let res: DiceItem[] = []
-    let newD: DiceItem = {
-        id: window.crypto.randomUUID(),
-        count: 1,
-        diceType: "bonus",
-    }
-    let buf: string = ""
-    let appending: "count" | "type" = "count"
-
-    let saveCount = (b: string, d: DiceItem) => {
-        try {
-            d.count *= Number(b)
-        } catch (e) {
-            console.error(e)
-        }
-    }
-
-    let saveType = (b: string, d: DiceItem) => {
-        try {
-            if (b === "" || b === "d")
-                d.diceType = "bonus"
-            else
-                d.diceType = b as DiceType
-        } catch (e) {
-            console.error(e)
-        }
-    }
-
-
-    for (let index = 0; index < f.length; index++) {
-        const c = f[index];
-        let is_last = index === (f.length - 1)
-        switch (c) {
-            case 'd':
-                // separate from value to dice
-                saveCount(buf, newD)
-                buf = "d"
-                appending = "type"
-                break;
-            case '+':
-                // separate to new DiceItem
-                if (appending === "count")
-                    saveCount(buf, newD)
-                else
-                    saveType(buf, newD)
-
-                res.push(newD)
-
-                newD = {
-                    id: window.crypto.randomUUID(),
-                    count: 1,
-                    diceType: "bonus",
-                }
-                buf = ""
-                appending = "count"
-                break;
-            case '-':
-                // separate to new DiceItem with negative value
-                if (appending === "count")
-                    saveCount(buf, newD)
-                else
-                    saveType(buf, newD)
-                res.push(newD)
-
-                newD = {
-                    id: window.crypto.randomUUID(),
-                    count: -1,
-                    diceType: "bonus",
-                }
-                buf = ""
-                appending = "count"
-                break;
-            default:
-                buf += c
-                if (is_last) {
-                    if (appending === "count")
-                        saveCount(buf, newD)
-                    else
-                        saveType(buf, newD)
-                    res.push(newD)
-                }
-                break;
-        }
-    }
-    return res
-}
 
 export default function Home() {
     let { roll } = useParams()
@@ -135,7 +30,7 @@ export default function Home() {
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [roll])
 
-    const [rollResult, setRollResult] = useState<string>();
+    const [rollResult, setRollResult] = useState<JSX.Element[]>();
     const [formula, setFormula] = useState<DiceItem[]>(decoded)
 
     useEffect(() => {
@@ -151,39 +46,50 @@ export default function Home() {
     }
 
     function rollDice() {
-        let res = ""
         let sum = 0
         let includeSum = false
-        formula.forEach((d, idx) => {
-            if (d && d.count !== 0) {
-                if (idx === 1) includeSum = true
-                if (d.diceType === "bonus") {
-                    if (idx > 0) res += " +"
-                    else res += " "
-                    res += d.count
-                    sum += d.count
-                    return
+        let res: JSX.Element[] = []
+        res = formula.reduce(
+            (prev, dice, idx, _) => {
+                if (dice.count !== 0) {
+                    if (idx === 1) includeSum = true
+
+                    if (dice.diceType === "bonus") {
+                        let op = (idx > 0) ? "+" : ""
+                        if (dice.count < 0)
+                            op = "-"
+
+                        let d = <Die operator={op} rollResult={Math.abs(dice.count)}></Die>
+
+                        sum += dice.count
+
+                        return [...prev, d]
+                    }
+
+                    let i = 0
+                    while (i < Math.abs(dice.count)) {
+                        if (i === 1) includeSum = true
+                        let r = Math.trunc(Math.random() * (diceSides[dice.diceType]) + 1) * Math.sign(dice.count)
+
+                        let op = ""
+                        if (i > 0 || idx > 0)
+                            op = r > 0 ? "+" : "-"
+
+                        let d = <Die rollResult={Math.abs(r)} operator={op}></Die>
+                        prev = [...prev, d]
+
+                        sum += r
+                        i++
+                    };
                 }
 
-                let i = 0
-                while (i < Math.abs(d.count)) {
-                    if (i === 1) includeSum = true
-                    let r = Math.trunc(Math.random() * (diceSides[d.diceType]) + 1)
-                    if (d.count > 0) {
-                        if (i > 0 || idx > 0)
-                            res += " + " + r
-                        else
-                            res += r
-                    }
-                    else res += " - " + r
-                    sum += r
-                    i++
-                };
-            }
-        })
+                return prev
+            }, res);
 
-        if (includeSum)
-            res += " = " + sum
+        if (includeSum) {
+            let d = <Die operator='=' rollResult={sum}></Die>
+            res.push(d)
+        }
 
         setRollResult(res)
     }
@@ -240,7 +146,6 @@ export default function Home() {
         setFormula(updated)
     }
 
-
     function share() {
         let d: ShareData = {
             title: "Share a roll with your friends!",
@@ -259,7 +164,7 @@ export default function Home() {
             </header>
             <section className='display'>
                 {rollResult != null
-                    ? <p>{rollResult}</p>
+                    ? rollResult
                     : ""}
             </section>
             <section className='controls'>

@@ -1,7 +1,7 @@
 import './index.css'
-import React, { ChangeEvent, useState } from "react"
-import { DiceItem } from "../../pages/home"
+import { ChangeEvent } from "react"
 import { CgClose, CgMathPlus, CgMathMinus } from "react-icons/cg";
+import { DiceItem } from '../../interfaces/diceItem';
 
 export interface DiceButtonProps {
     data: DiceItem
