@@ -1,7 +1,7 @@
 import './index.css'
 import Icon from '../Icon'
 import { DiceType } from '../../interfaces/diceItem'
-import React from 'react'
+import React, { useEffect, useState } from 'react'
 
 export interface DieProps extends React.HTMLProps<Element> {
     rollResult: number
@@ -10,9 +10,21 @@ export interface DieProps extends React.HTMLProps<Element> {
 }
 
 export default function Die(props: DieProps) {
-    let delay = `animation-delay:${props.key!}s`
+    const [isRolling, setIsRolling] = useState(false)
+    useEffect(() => {
+        setIsRolling(false);
+        setTimeout(() => {
+            setIsRolling(true);
+        }, 10);
+    }, [props.key]);
+
+    const className = isRolling
+        ? props.icon === "bonus"
+            ? "die fadeIn"
+            : "die fadeIn rolling"
+        : "die"
     return (
-        <div className="die">
+        <div className={className} >
             <p>{props.operator}</p>
             <Icon
                 fill='var(--dark-color)'

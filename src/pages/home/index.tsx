@@ -60,7 +60,7 @@ export default function Home() {
                         if (dice.count < 0)
                             op = "-"
 
-                        let d = <Die icon={dice.diceType} operator={op} rollResult={Math.abs(dice.count)}></Die>
+                        let d = <Die key={window.crypto.randomUUID()} icon={dice.diceType} operator={op} rollResult={Math.abs(dice.count)}></Die>
 
                         sum += dice.count
 
@@ -76,7 +76,7 @@ export default function Home() {
                         if (i > 0 || idx > 0)
                             op = r > 0 ? "+" : "-"
 
-                        let d = <Die icon={dice.diceType} rollResult={Math.abs(r)} operator={op}></Die>
+                        let d = <Die key={window.crypto.randomUUID()} icon={dice.diceType} rollResult={Math.abs(r)} operator={op}></Die>
                         prev = [...prev, d]
 
                         sum += r
@@ -88,7 +88,7 @@ export default function Home() {
             }, res);
 
         if (includeSum) {
-            let d = <Die icon='bonus' operator='=' rollResult={sum}></Die>
+            let d = <Die key={window.crypto.randomUUID()} icon='bonus' operator='=' rollResult={sum}></Die>
             res.push(d)
         }
 

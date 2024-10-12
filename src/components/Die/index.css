@@ -14,7 +14,6 @@
     justify-content: center;
     justify-items: center;
     align-items: center;
-    animation: rolling 2s cubic-bezier(0.22, 1, 0.36, 1);
 }
 
 .die svg path {
@@ -23,8 +22,6 @@
 
 .die p {
     margin: 0;
-    animation: fadeIn 2s 1.5s forwards;
-    animation-timing-function: cubic-bezier(0.165, 0.84, 0.44, 1);
     opacity: 0%;
 }
 
@@ -38,6 +35,14 @@
     margin: 0 4px;
 }
 
+.rolling svg {
+    animation: rolling 2s cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+.fadeIn p {
+    animation: fadeIn 2s 1.5s forwards;
+    animation-timing-function: cubic-bezier(0.165, 0.84, 0.44, 1);
+}
 
 @keyframes rolling {
     from {
