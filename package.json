@@ -1,6 +1,11 @@
 {
-  "name": "prototype",
+  "name": "roll_my_dice",
   "version": "0.1.0",
+  "author": {
+    "email": "contato@panz.dev.br",
+    "name": "panz",
+    "url": "https://panz.dev.br"
+  },
   "private": true,
   "dependencies": {
     "@testing-library/jest-dom": "^5.17.0",

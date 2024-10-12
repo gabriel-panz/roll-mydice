@@ -35,13 +35,14 @@ export default function DiceButton(props: DiceButtonProps) {
                     value={data.diceType}
                     onChange={(e) => onSelectedDieChange(e, data.id)}
                 >
-                    <option className='dieOption' value="bonus">bonus</option>
                     <option className='dieOption' value="d4">d4</option>
                     <option className='dieOption' value="d6">d6</option>
                     <option className='dieOption' value="d8">d8</option>
                     <option className='dieOption' value="d10">d10</option>
                     <option className='dieOption' value="d12">d12</option>
                     <option className='dieOption' value="d20">d20</option>
+                    <option className='dieOption' value="d100">d100</option>
+                    <option className='dieOption' value="bonus">bonus</option>
                 </select>
                 <CgClose
                     className="action remove"

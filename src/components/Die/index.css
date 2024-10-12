@@ -1,3 +1,38 @@
 .die {
-    
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin: 4px;
+    /* background-color: red;
+    border: solid white; */
+    height: 80px;
+    width: 80px;
+}
+
+.die svg {
+    position: absolute;
+    z-index: -1;
+    display: flex;
+    justify-content: center;
+    justify-items: center;
+    align-items: center;
+}
+
+.die svg path {
+    text-align: center;
+}
+
+.die p {
+    margin: 0;
+}
+
+.die p::selection {
+    background-color: var(--light-color);
+    color: var(--dark-color);
+}
+
+.die .rollResult {
+    display: flex;
+    margin: 0 4px;
+
 }

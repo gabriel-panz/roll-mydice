@@ -18,10 +18,11 @@
   align-content: center;
   font-size: x-large;
   padding: 1rem 2rem 1rem 2rem;
-}
 
-.display p {
-  margin: 0;
+  display: flex;
+  flex-wrap: wrap;
+  text-align: justify;
+  justify-content: center;
 }
 
 .diceControls {
